@@ -43,7 +43,7 @@ export default function Horas() {
     const tickets = file.tickets
     const timeWorked = tickets.reduce((acc, cur) => {
         const comments = cur.Comments.filter(c => {
-            return c.created_by == user}
+            return c.creator_id == user }
         )
         if (comments.length > 0) {
             const hoursTotal = comments.reduce((acc, cur) => {
@@ -96,7 +96,7 @@ export default function Horas() {
         return (
             <>
                 <button onClick={goBackToUser}>Selecciona otro usuario</button>
-                Horas trabajadas hoy: {hours} horas
+                Minutos trabajados hoy: {hours} minutos
             </>
         )
   }
