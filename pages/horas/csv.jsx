@@ -69,12 +69,22 @@ export default function Csv() {
     setCurrentPage(states.SELECT_USER)
   }
 
+  const getTimeInHours = () => {
+    const horas = Math.floor(hours / 60)
+    const minutes = hours - (horas*60)
+    return (
+      <>
+        <span>{horas} horas y {minutes} minutos</span>
+      </>
+    )
+  }
+
   const getTickets = () => {
     const ticketList = JSON.parse(tickets)
     console.log(ticketList)
     return ticketList.map((ticket, index) => {
       return (<div  key={index}>
-         <a href={ticket["Link to Ticket"]}>{ticket["Summary"]}</a>
+         <a href={ticket["Link to Ticket"]} target="_blank" rel="noreferrer">{ticket["Summary"]}</a>
       </div>)
     })
   }
@@ -105,7 +115,8 @@ export default function Csv() {
         return (
             <>
                 <button onClick={goBackToUser}>Selecciona otro usuario</button>
-                <h2>Minutos trabajados hoy: {hours} minutos</h2><h3>En los siguientes tickets:</h3>
+                <h2>Minutos trabajados hoy: <span>{hours}</span> minutos que són <span>{getTimeInHours()}</span></h2>
+                <h3>En los siguientes tickets:</h3>
                 {getTickets()}
             </>
         )
