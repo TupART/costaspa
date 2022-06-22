@@ -1,6 +1,5 @@
 import { useState } from "react";
 import {parse} from "papaparse";
-import { clearPreviewData } from "next/dist/server/api-utils";
 
 const states = {
     UPLOAD_FILE: "UPLOAD_FILE",
@@ -14,6 +13,7 @@ export default function Csv() {
   const [user, setUser] = useState("");
   const [hours, setHours] = useState("");
   const [laborers, setLaborers] = useState("");
+  const [tickets, setTickets] = useState("");
 
   const handleChange = e => {
     const fileReader = new FileReader();
@@ -35,18 +35,11 @@ export default function Csv() {
       setLaborers(laborerList)
       setFiles(JSON.stringify(doc.data));
     };
-    //console.log(files)
   };
   
   const handleSubmit = (e) => {
     e.preventDefault();
     setCurrentPage(states.SELECT_USER)
-  }
-
-  const getUsers = () => {
-    const file = JSON.parse(files)
-    const users = file.users.filter((user) => user.role==='admin')
-    return users;
   }
 
   const handleSelectUser = (e) => {
@@ -56,16 +49,14 @@ export default function Csv() {
     setUser(e.target.getAttribute('data-key'))
   }
 
-  const handleSelectedUser = (e) => {
+  const handleSelectedUser = () => {
     const file = JSON.parse(files)
-    const tickets = file.filter((ticket) => ticket.Laborer === user)
-    const timeWorked = tickets.reduce((acc, cur) => {
-        console.log({acc, cur})
+    const ticketsList = file.filter((ticket) => ticket.Laborer === user)
+    const timeWorked = ticketsList.reduce((acc, cur) => {
         acc += parseInt(cur["Minutes Worked"])
         return acc
-    },0)
-    console.log({timeWorked})
-
+    },0)  
+    setTickets(JSON.stringify(ticketsList))
     setHours(timeWorked)
     setCurrentPage(states.USER_INFO)
   }
@@ -76,6 +67,16 @@ export default function Csv() {
   
   const goBackToUser = () => { 
     setCurrentPage(states.SELECT_USER)
+  }
+
+  const getTickets = () => {
+    const ticketList = JSON.parse(tickets)
+    console.log(ticketList)
+    return ticketList.map((ticket, index) => {
+      return (<div  key={index}>
+         <a href={ticket["Link to Ticket"]}>{ticket["Summary"]}</a>
+      </div>)
+    })
   }
 
   switch (currentPage) {
@@ -104,7 +105,8 @@ export default function Csv() {
         return (
             <>
                 <button onClick={goBackToUser}>Selecciona otro usuario</button>
-                Minutos trabajados hoy: {hours} minutos
+                <h2>Minutos trabajados hoy: {hours} minutos</h2><h3>En los siguientes tickets:</h3>
+                {getTickets()}
             </>
         )
   }
