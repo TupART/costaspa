@@ -80,11 +80,13 @@ export default function Csv() {
   }
 
   const getTickets = () => {
-    const ticketList = JSON.parse(tickets)
-    console.log(ticketList)
+    const ticketList = JSON.parse(tickets);
+    console.log(ticketList);
+
+    
     return ticketList.map((ticket, index) => {
       return (<div  key={index}>
-         <a href={ticket["Link to Ticket"]} target="_blank" rel="noreferrer">{ticket["Summary"]}</a>
+         <a href={ticket["Link to Ticket"]} target="_blank" rel="noreferrer">{ticket.Summary}</a>
       </div>)
     })
   }
@@ -123,7 +125,7 @@ export default function Csv() {
   }
 
   return (
-    currentPage == states.UPLOAD_FILE ?? <>
+    currentPage === states.UPLOAD_FILE ?? <>
         
     </>
   );

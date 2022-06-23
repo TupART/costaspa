@@ -1,5 +1,16 @@
 import Link from "next/link";
-import { useState, useEffect } from "react";
+
+export function hello() {
+    console.log   ("heelo"); 
+    return (
+        <>
+        <h1>Hello</h1>
+        <Link href="/">
+            <a>Home</a>
+        </Link>
+        </>
+    );
+}
 
 export default function Horas() {
     return (
