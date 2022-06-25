@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Button } from "@nextui-org/react";
 
 const states = {
     UPLOAD_FILE: "UPLOAD_FILE",
@@ -85,7 +86,7 @@ export default function Horas() {
     case states.SELECT_USER:
         return (
             <>
-                <button onClick={goBackToImport}>Importar otro usuario</button>
+                <Button onClick={goBackToImport}>Importar otro usuario</Button>
                 {getUsers().map((user) => {
                     return <h1 key={user.import_id} data-key={user.import_id} onClick={handleSelectUser}>{user.first_name} {user.last_name}</h1>
                 })}

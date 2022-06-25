@@ -1,5 +1,7 @@
 import { useState } from "react";
 import {parse} from "papaparse";
+import { Button, Grid } from "@nextui-org/react";
+import Task from "../../components/task";
 
 const states = {
     UPLOAD_FILE: "UPLOAD_FILE",
@@ -79,16 +81,15 @@ export default function Csv() {
     )
   }
 
-  const getTickets = () => {
+  const getTicketList = () => {
     const ticketList = JSON.parse(tickets);
-    console.log(ticketList);
-
     
-    return ticketList.map((ticket, index) => {
-      return (<div  key={index}>
-         <a href={ticket["Link to Ticket"]} target="_blank" rel="noreferrer">{ticket.Summary}</a>
-      </div>)
-    })
+    return (
+      <Grid>
+        {ticketList.map((ticket, index) => <Task key={index} time={ticket["Minutes Worked"]} title={ticket.Summary} url={ticket["Link to Ticket"]} />)}
+      </Grid>
+    )
+    
   }
 
   switch (currentPage) {
@@ -105,7 +106,7 @@ export default function Csv() {
     case states.SELECT_USER:
         return (
             <>
-                <button onClick={goBackToImport}>Importar otro usuario</button>
+                <Button onClick={goBackToImport}>Importar otro archivo</Button>
                 {laborers.map((user) => {
                     return <h1 key={user} data-key={user} onClick={handleSelectUser}>{user}</h1>
                 })}
@@ -119,7 +120,7 @@ export default function Csv() {
                 <button onClick={goBackToUser}>Selecciona otro usuario</button>
                 <h2>Minutos trabajados hoy: <span>{hours}</span> minutos que són <span>{getTimeInHours()}</span></h2>
                 <h3>En los siguientes tickets:</h3>
-                {getTickets()}
+                {getTicketList()}
             </>
         )
   }
