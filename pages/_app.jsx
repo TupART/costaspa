@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { createTheme, NextUIProvider } from '@nextui-org/react'
 import { ThemeProvider as NextThemesProvider } from 'next-themes'
+import { AuthProvider } from '../services/auth'
 import Navbar from '../components/navbar'
 
 const theme = {
@@ -30,12 +31,14 @@ function MyApp({ Component, pageProps }) {
       attribute="class"
       value={{
         light: lightTheme.className,
-        dark: darkTheme.className
+        dark: darkTheme.className,
       }}
     >
       <NextUIProvider>
-        <Navbar />
-        <Component {...pageProps} />
+        <AuthProvider>
+          <Navbar />
+          <Component {...pageProps} />
+        </AuthProvider>
       </NextUIProvider>
     </NextThemesProvider>
   )

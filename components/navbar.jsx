@@ -1,8 +1,11 @@
-import { Container } from '@nextui-org/react'
+import { Button, Container, Loading } from '@nextui-org/react'
 import Link from 'next/link'
 import DarkModeSwitch from './darkModeSwitch'
+import { useAuth } from '../services/auth'
 
 export default function Navbar() {
+  const { loading, signInWithMicrosoft } = useAuth()
+    
   return (
     <Container
       display="flex"
@@ -27,7 +30,12 @@ export default function Navbar() {
           </li>
         </ul>
       </div>
-      <DarkModeSwitch />
+      <div>
+        <DarkModeSwitch />
+        <Button onClick={signInWithMicrosoft} loading={loading}>
+          {loading ? <Loading /> : 'Sign in with Microsoft'}
+        </Button>
+      </div>
     </Container>
   )
 }
