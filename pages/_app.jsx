@@ -4,14 +4,24 @@ import { ThemeProvider as NextThemesProvider } from 'next-themes'
 import { AuthProvider } from '../services/auth'
 import Navbar from '../components/navbar'
 
+const theme = {
+  colors: {
+    primary: '#2980b9'
+  }
+}
+
 const lightTheme = createTheme({
   type: 'light',
-  theme: {},
+  theme: {
+    ...theme
+  }
 })
 
 const darkTheme = createTheme({
   type: 'dark',
-  theme: {},
+  theme: {
+    ...theme
+  }
 })
 
 function MyApp({ Component, pageProps }) {

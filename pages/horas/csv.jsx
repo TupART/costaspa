@@ -1,31 +1,32 @@
-import { useState } from "react";
-import {parse} from "papaparse";
-import { Button, Grid } from "@nextui-org/react";
-import Task from "../../components/task";
+import { useState } from 'react'
+import { parse } from 'papaparse'
+import { Container, Grid } from '@nextui-org/react'
+import GoToButton from '../../components/goToButton'
+import Task from '../../components/task'
 
 const states = {
-    UPLOAD_FILE: "UPLOAD_FILE",
-    SELECT_USER: "SELECT_USER",
-    USER_INFO: "USER_INFO",
+  UPLOAD_FILE: 'UPLOAD_FILE',
+  SELECT_USER: 'SELECT_USER',
+  USER_INFO: 'USER_INFO'
 }
 
 export default function Csv() {
-  const [files, setFiles] = useState("");
-  const [currentPage, setCurrentPage] = useState(states.UPLOAD_FILE);
-  const [user, setUser] = useState("");
-  const [hours, setHours] = useState("");
-  const [laborers, setLaborers] = useState("");
-  const [tickets, setTickets] = useState("");
+  const [files, setFiles] = useState('')
+  const [currentPage, setCurrentPage] = useState(states.UPLOAD_FILE)
+  const [user, setUser] = useState('')
+  const [hours, setHours] = useState('')
+  const [laborers, setLaborers] = useState('')
+  const [tickets, setTickets] = useState('')
 
-  const handleChange = e => {
-    const fileReader = new FileReader();
-    fileReader.readAsText(e.target.files[0], "UTF-8");
-    fileReader.onload = e => {
+  const handleChange = (e) => {
+    const fileReader = new FileReader()
+    fileReader.readAsText(e.target.files[0], 'UTF-8')
+    fileReader.onload = (e) => {
       const doc = parse(e.target.result, {
         header: true,
         skipEmptyLines: true
       })
-      const laborersList = doc.data.map(laborer => {
+      const laborersList = doc.data.map((laborer) => {
         return laborer.Laborer
       })
       const laborerList = laborersList.reduce((acc, curr) => {
@@ -35,19 +36,19 @@ export default function Csv() {
         return acc
       }, [])
       setLaborers(laborerList)
-      setFiles(JSON.stringify(doc.data));
-    };
-  };
-  
+      setFiles(JSON.stringify(doc.data))
+    }
+  }
+
   const handleSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault()
     setCurrentPage(states.SELECT_USER)
   }
 
   const handleSelectUser = (e) => {
-    const selected = document.querySelectorAll(".selected")
-    selected.forEach((element) => element.classList.remove("selected"))
-    e.target.classList.add("selected")
+    const selected = document.querySelectorAll('.selected')
+    selected.forEach((element) => element.classList.remove('selected'))
+    e.target.classList.add('selected')
     setUser(e.target.getAttribute('data-key'))
   }
 
@@ -55,79 +56,89 @@ export default function Csv() {
     const file = JSON.parse(files)
     const ticketsList = file.filter((ticket) => ticket.Laborer === user)
     const timeWorked = ticketsList.reduce((acc, cur) => {
-        acc += parseInt(cur["Minutes Worked"])
-        return acc
-    },0)  
+      acc += parseInt(cur['Minutes Worked'])
+      return acc
+    }, 0)
     setTickets(JSON.stringify(ticketsList))
     setHours(timeWorked)
     setCurrentPage(states.USER_INFO)
   }
 
-  const goBackToImport = () => {
-    setCurrentPage(states.UPLOAD_FILE)
-  }
-  
-  const goBackToUser = () => { 
-    setCurrentPage(states.SELECT_USER)
+  const goBackTo = (state) => {
+    setCurrentPage(state)
   }
 
   const getTimeInHours = () => {
     const horas = Math.floor(hours / 60)
-    const minutes = hours - (horas*60)
+    const minutes = hours - horas * 60
     return (
-      <>
-        <span>{horas} horas y {minutes} minutos</span>
-      </>
+      <span>
+        {horas} horas y {minutes} minutos
+      </span>
     )
   }
 
   const getTicketList = () => {
-    const ticketList = JSON.parse(tickets);
-    
+    const ticketList = JSON.parse(tickets)
+
     return (
-      <Grid>
-        {ticketList.map((ticket, index) => <Task key={index} time={ticket["Minutes Worked"]} title={ticket.Summary} url={ticket["Link to Ticket"]} />)}
-      </Grid>
+      <Grid.Container direction="column" gap={2}>
+        {ticketList.map((ticket, index) => (
+          <Grid key={index}>
+            <Task
+              time={ticket['Minutes Worked']}
+              title={ticket.Summary}
+              url={ticket['Link to Ticket']}
+            />
+          </Grid>
+        ))}
+      </Grid.Container>
     )
-    
   }
 
   switch (currentPage) {
     case states.UPLOAD_FILE:
-        return (
-            <>
-                <h1>Upload CSV file</h1>
-                <form onSubmit={handleSubmit}>
-                    <input type="file" onChange={handleChange} />
-                    <input type="submit" value="Enviar" />
-                </form>
-            </>
-        )
+      return (
+        <Container>
+          <h1>Upload CSV file</h1>
+          <form onSubmit={handleSubmit}>
+            <input type="file" onChange={handleChange} />
+            <input type="submit" value="Enviar" />
+          </form>
+        </Container>
+      )
     case states.SELECT_USER:
-        return (
-            <>
-                <Button onClick={goBackToImport}>Importar otro archivo</Button>
-                {laborers.map((user) => {
-                    return <h1 key={user} data-key={user} onClick={handleSelectUser}>{user}</h1>
-                })}
-                <button onClick={handleSelectedUser}>Siguente</button>
-            </>
-        )
-    
+      return (
+        <Container>
+          <GoToButton doAction action={goBackTo} href={states.UPLOAD_FILE}>
+            Importar otro archivo
+          </GoToButton>
+          {laborers.map((user) => {
+            return (
+              <h1 key={user} data-key={user} onClick={handleSelectUser}>
+                {user}
+              </h1>
+            )
+          })}
+          <button onClick={handleSelectedUser}>Siguente</button>
+        </Container>
+      )
+
     case states.USER_INFO:
-        return (
-            <>
-                <button onClick={goBackToUser}>Selecciona otro usuario</button>
-                <h2>Minutos trabajados hoy: <span>{hours}</span> minutos que són <span>{getTimeInHours()}</span></h2>
-                <h3>En los siguientes tickets:</h3>
-                {getTicketList()}
-            </>
-        )
+      return (
+        <Container>
+          <GoToButton doAction action={goBackTo} href={states.SELECT_USER}>
+            Selecciona otro usuario
+          </GoToButton>
+          <h2>
+            Minutos trabajados hoy: <span>{hours}</span> minutos que són{' '}
+            <span>{getTimeInHours()}</span>
+          </h2>
+          <h3>En los siguientes tickets:</h3>
+          {getTicketList()}
+        </Container>
+      )
   }
 
-  return (
-    currentPage === states.UPLOAD_FILE ?? <>
-        
-    </>
-  );
+  return currentPage === states.UPLOAD_FILE ?? <></>
 }
