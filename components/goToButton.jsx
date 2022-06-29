@@ -1,5 +1,5 @@
 import { FiArrowLeft } from 'react-icons/fi'
-import { Link } from '@nextui-org/react'
+import { Link, Tooltip } from '@nextui-org/react'
 import NextLink from 'next/link'
 
 export default function goToButton({
@@ -7,7 +7,10 @@ export default function goToButton({
   href = '/',
   color = 'secondary',
   action,
-  doAction = false
+  doAction = false,
+  icon = <FiArrowLeft />,
+  tooltip,
+  tooltipPlacement = 'top'
 }) {
   const handleClick = () => {
     action(href)
@@ -15,15 +18,17 @@ export default function goToButton({
 
   if (doAction) {
     return (
-      <Link
-        block
-        color={color}
-        onClick={handleClick}
-        css={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}
-      >
-        <FiArrowLeft />
-        {children}
-      </Link>
+      <Tooltip content={tooltip} placement={tooltipPlacement}>
+        <Link
+          block
+          color={color}
+          onClick={handleClick}
+          css={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}
+        >
+          {icon}
+          {children}
+        </Link>
+      </Tooltip>
     )
   }
   return (
