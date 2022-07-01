@@ -22,7 +22,6 @@ export default function Navbar() {
           <Logo />
         </Grid>
         <Grid css={{ display: 'inline-flex', gap: '$10' }}>
-          <MenuLink href="/">Home</MenuLink>
           <MenuLink href="/horas">Horas</MenuLink>
           <MenuLink href="/tareas">Tareas</MenuLink>
         </Grid>

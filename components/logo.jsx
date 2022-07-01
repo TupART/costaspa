@@ -1,10 +1,19 @@
 import Link from 'next/link'
+import { Text } from '@nextui-org/react'
 
 export default function Logo() {
   return (
     <Link href="/">
       <a>
-        <h3>Helpdesk Spa</h3>
+        <Text
+          h3
+          css={{
+            textGradient: '45deg, $primary -20%, $secondary 50%'
+          }}
+          weight="bold"
+        >
+          Helpdesk SPA
+        </Text>
       </a>
     </Link>
   )

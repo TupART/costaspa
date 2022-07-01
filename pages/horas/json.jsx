@@ -39,7 +39,7 @@ export default function Horas() {
     setUser(e.target.getAttribute('data-key'))
   }
 
-  const handleSelectedUser = (e) => {
+  const handleSelectedUser = () => {
     const file = JSON.parse(files)
     const tickets = file.tickets
     const timeWorked = tickets.reduce(

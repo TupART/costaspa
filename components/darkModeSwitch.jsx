@@ -1,4 +1,4 @@
-import { useTheme, Switch, Grid } from '@nextui-org/react'
+import { useTheme } from '@nextui-org/react'
 import { useTheme as useNextTheme } from 'next-themes'
 import { SunIcon } from './icons/SunIcon'
 import { MoonIcon } from './icons/MoonIcon'
