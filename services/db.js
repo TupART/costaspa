@@ -1,18 +1,19 @@
 // import { compareDesc, compareAsc, parseISO } from 'date-fns';
 // import axios from 'axios';
-import { db } from './firebase';
-import { collection, addDoc } from "firebase/firestore";
+import { db } from './firebase'
+import { collection, addDoc } from 'firebase/firestore'
 
 export async function createUser(uid, data) {
   return await addDoc(collection(db, 'users'), {
-    uid, 
+    uid,
     ...data
-  }).then((doc) => {
-    console.log("User created with id ", doc.id);
-  }).catch((e) => {
-    console.log("Error creating user", e);
-  });
-  
+  })
+    .then((doc) => {
+      console.log('User created with id ', doc.id)
+    })
+    .catch((e) => {
+      console.log('Error creating user', e)
+    })
 }
 /*
 export async function createSite(data) {
