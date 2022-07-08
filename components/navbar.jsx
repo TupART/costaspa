@@ -25,7 +25,7 @@ export default function Navbar() {
           <MenuLink href="/horas">Horas</MenuLink>
           <MenuLink href="/tareas">Tareas</MenuLink>
         </Grid>
-        <Grid css={{ display: 'flex', alignItems: 'center' }}>
+        <Grid css={{ display: 'flex', alignItems: 'center', gap: '$4' }}>
           <DarkModeSwitch />
           <User />
         </Grid>

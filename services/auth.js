@@ -26,7 +26,6 @@ function useFirebaseAuth() {
 
       createUser(user.uid, userWithoutToken)
       setUser(user)
-
       setLoading(false)
       return user
     } else {
@@ -77,6 +76,8 @@ function useFirebaseAuth() {
 
 const formatUser = async (user) => {
   return {
+    token: user.refreshToken,
+    accessTocken: user.accessToken,
     uid: user.uid,
     email: user.email,
     name: user.displayName,

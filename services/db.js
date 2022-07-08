@@ -1,19 +1,39 @@
 // import { compareDesc, compareAsc, parseISO } from 'date-fns';
 // import axios from 'axios';
 import { db } from './firebase'
-import { collection, addDoc } from 'firebase/firestore'
+import {
+  collection,
+  addDoc,
+  query,
+  where,
+  limit,
+  getDocs,
+  updateDoc
+} from 'firebase/firestore'
 
 export async function createUser(uid, data) {
-  return await addDoc(collection(db, 'users'), {
-    uid,
-    ...data
+  const userRefs = collection(db, 'users')
+  data.photoUrl =
+    data.photoUrl ||
+    'https://firebasestorage.googleapis.com/v0/b/next-auth-demo.appspot.com/o/avatar.png?alt=media'
+
+  const q = query(userRefs, where('uid', '==', data.uid), limit(1))
+  const user = await getDocs(q)
+  if (user.empty) {
+    return await addDoc(collection(db, 'users'), {
+      uid,
+      ...data
+    })
+      .then((doc) => {
+        console.log('User created with id ', doc.id)
+      })
+      .catch((e) => {
+        console.log('Error creating user', e)
+      })
+  }
+  return await updateDoc(user.docs[0].ref, {
+    accessTocken: data.accessTocken
   })
-    .then((doc) => {
-      console.log('User created with id ', doc.id)
-    })
-    .catch((e) => {
-      console.log('Error creating user', e)
-    })
 }
 /*
 export async function createSite(data) {

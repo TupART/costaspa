@@ -2,6 +2,7 @@
 import { createTheme, NextUIProvider } from '@nextui-org/react'
 import { ThemeProvider as NextThemesProvider } from 'next-themes'
 import { AuthProvider } from '../services/auth'
+import { TaskProvider } from '../services/task'
 import Navbar from '../components/navbar'
 
 const theme = {
@@ -36,8 +37,10 @@ function MyApp({ Component, pageProps }) {
     >
       <NextUIProvider>
         <AuthProvider>
-          <Navbar />
-          <Component {...pageProps} />
+          <TaskProvider>
+            <Navbar />
+            <Component {...pageProps} />
+          </TaskProvider>
         </AuthProvider>
       </NextUIProvider>
     </NextThemesProvider>
