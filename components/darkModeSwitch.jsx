@@ -1,4 +1,4 @@
-import { useTheme, Switch, Grid } from '@nextui-org/react'
+import { useTheme } from '@nextui-org/react'
 import { useTheme as useNextTheme } from 'next-themes'
 import { SunIcon } from './icons/SunIcon'
 import { MoonIcon } from './icons/MoonIcon'
@@ -13,21 +13,25 @@ export default function DarkModeSwitch() {
   const { setTheme } = useNextTheme()
   const { isDark, type } = useTheme()
 
-  const handleChange = (e) => {
+  const handleChange = () => {
     setTheme(type === 'light' ? 'dark' : 'light')
   }
 
-  return (
-    <div>
-      <SunIcon size={20} fill={isDark ? COLORS.grey : COLORS.light} filled />
-      <Switch
-        checked={isDark}
-        onChange={handleChange}
-        color="primary"
-        label="Dark Mode"
-        size={'xs'}
-      />
-      <MoonIcon size={20} fill={isDark ? COLORS.dark : COLORS.grey} filled />
-    </div>
+  return isDark ? (
+    <SunIcon
+      onClick={handleChange}
+      size={20}
+      filled
+      color={COLORS.light}
+      style={{ cursor: 'pointer' }}
+    />
+  ) : (
+    <MoonIcon
+      onClick={handleChange}
+      filled
+      color={COLORS.dark}
+      size={20}
+      style={{ cursor: 'pointer' }}
+    />
   )
 }

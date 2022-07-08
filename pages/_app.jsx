@@ -31,7 +31,7 @@ function MyApp({ Component, pageProps }) {
       attribute="class"
       value={{
         light: lightTheme.className,
-        dark: darkTheme.className,
+        dark: darkTheme.className
       }}
     >
       <NextUIProvider>
