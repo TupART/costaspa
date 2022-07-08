@@ -1,51 +1,51 @@
-import { useState, useEffect, useContext, createContext } from 'react';
-import Router from 'next/router';
-import { auth } from './firebase';
-import { createUser } from './db';
-import { getAuth, signInWithPopup, OAuthProvider } from "firebase/auth";
+import { useState, useEffect, useContext, createContext } from 'react'
+import Router from 'next/router'
+import { auth } from './firebase'
+import { createUser } from './db'
+import { getAuth, signInWithPopup, OAuthProvider } from 'firebase/auth'
 
-const authContext = createContext();
+const authContext = createContext()
 
 export function AuthProvider({ children }) {
-  const auth = useFirebaseAuth();
-  return <authContext.Provider value={auth}>{children}</authContext.Provider>;
+  const auth = useFirebaseAuth()
+  return <authContext.Provider value={auth}>{children}</authContext.Provider>
 }
 
 export const useAuth = () => {
-  return useContext(authContext);
-};
+  return useContext(authContext)
+}
 
 function useFirebaseAuth() {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null)
+  const [loading, setLoading] = useState(true)
 
   const handleUser = async (rawUser) => {
     if (rawUser) {
-      const user = await formatUser(rawUser);
-      const { token, ...userWithoutToken } = user;
+      const user = await formatUser(rawUser)
+      const { token, ...userWithoutToken } = user
 
-      createUser(user.uid, userWithoutToken);
-      setUser(user);
+      createUser(user.uid, userWithoutToken)
+      setUser(user)
 
-      setLoading(false);
-      return user;
+      setLoading(false)
+      return user
     } else {
-      setUser(false);
-      setLoading(false);
-      return false;
+      setUser(false)
+      setLoading(false)
+      return false
     }
-  };
+  }
 
   const signInWithMicrosoft = async (redirect) => {
     setLoading(true)
-    const provider = new OAuthProvider('microsoft.com');
+    const provider = new OAuthProvider('microsoft.com')
     provider.setCustomParameters({
-      tenant: process.env.NEXT_PUBLIC_FIREBASE_TENANT,
+      tenant: process.env.NEXT_PUBLIC_FIREBASE_TENANT
     })
     return signInWithPopup(auth, provider).then((response) => {
-      handleUser(response.user);
+      handleUser(response.user)
       if (redirect) {
-        Router.push(redirect);
+        Router.push(redirect)
       }
     })
   }
@@ -53,20 +53,20 @@ function useFirebaseAuth() {
   const signout = () => {
     return auth()
       .signOut()
-      .then(() => handleUser(false));
-  };
+      .then(() => handleUser(false))
+  }
 
   useEffect(() => {
-    const unsubscribe = auth.onIdTokenChanged(handleUser);
-    return () => unsubscribe();
-  }, []);
+    const unsubscribe = auth.onIdTokenChanged(handleUser)
+    return () => unsubscribe()
+  }, [])
 
   return {
     user,
     loading,
     signInWithMicrosoft,
-    signout,
-  };
+    signout
+  }
 }
 
 const formatUser = async (user) => {
@@ -75,6 +75,6 @@ const formatUser = async (user) => {
     email: user.email,
     name: user.displayName,
     provider: user.providerData[0].providerId,
-    photoUrl: user.photoURL,
-  };
-};
+    photoUrl: user.photoURL
+  }
+}

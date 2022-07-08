@@ -1,6 +1,6 @@
-import { initializeApp } from 'firebase/app';
-import { getFirestore } from "firebase/firestore";
-import { getAuth } from 'firebase/auth'; // If you need it
+import { initializeApp } from 'firebase/app'
+import { getFirestore } from 'firebase/firestore'
+import { getAuth } from 'firebase/auth' // If you need it
 
 // import 'firebase/storage' // If you need it
 // import 'firebase/analytics' // If you need it
@@ -14,10 +14,9 @@ const clientCredentials = {
   storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
-};
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
+}
 
-
-export const app = initializeApp(clientCredentials);
-export const db = getFirestore(app);
-export const auth = getAuth(app);
+export const app = initializeApp(clientCredentials)
+export const db = getFirestore(app)
+export const auth = getAuth(app)
