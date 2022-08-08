@@ -16,7 +16,7 @@ export default function Task({ time, title, url }) {
         variant="bordered"
         css={{
           borderColor: time > 0 ? '$secondary' : '$warning',
-          backgroundColor: backgroundColor
+          backgroundColor
         }}
         borderWeight={time > 0 ? 'normal' : 'bold'}
       >

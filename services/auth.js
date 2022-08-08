@@ -2,7 +2,8 @@ import { useState, useEffect, useContext, createContext } from 'react'
 import Router from 'next/router'
 import { auth } from './firebase'
 import { createUser } from './db'
-import { getAuth, signInWithPopup, OAuthProvider } from 'firebase/auth'
+import { signInWithPopup, OAuthProvider, signOut, getAuth } from 'firebase/auth'
+
 
 const authContext = createContext()
 
@@ -51,9 +52,15 @@ function useFirebaseAuth() {
   }
 
   const signout = () => {
-    return auth()
-      .signOut()
-      .then(() => handleUser(false))
+    const auth = getAuth()
+    return signOut(auth)
+      .then(() => {
+        setUser(false)
+        Router.push('/')
+      })
+      .catch((error) => {
+        console.error('Error signing out', error)
+      })
   }
 
   useEffect(() => {

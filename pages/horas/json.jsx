@@ -39,13 +39,13 @@ export default function Horas() {
     setUser(e.target.getAttribute('data-key'))
   }
 
-  const handleSelectedUser = (e) => {
+  const handleSelectedUser = () => {
     const file = JSON.parse(files)
     const tickets = file.tickets
     const timeWorked = tickets.reduce(
       (acc, cur) => {
         const comments = cur.Comments.filter((c) => {
-          return c.creator_id == user
+          return c.creator_id === user
         })
         if (comments.length > 0) {
           const hoursTotal = comments.reduce((acc, cur) => {
@@ -113,5 +113,5 @@ export default function Horas() {
       )
   }
 
-  return currentPage == states.UPLOAD_FILE ?? <></>
+  return currentPage === states.UPLOAD_FILE ?? <></>
 }
