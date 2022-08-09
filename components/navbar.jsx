@@ -23,9 +23,10 @@ export default function Navbar() {
         </Grid>
         <Grid css={{ display: 'inline-flex', gap: '$10' }}>
           <MenuLink href="/horas">Horas</MenuLink>
+          <MenuLink href="/excel">Excel</MenuLink>
           <MenuLink href="/tareas">Tareas</MenuLink>
         </Grid>
-        <Grid css={{ display: 'flex', alignItems: 'center' }}>
+        <Grid css={{ display: 'flex', alignItems: 'center', gap: '$6' }}>
           <DarkModeSwitch />
           <User />
         </Grid>

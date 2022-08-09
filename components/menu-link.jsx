@@ -4,9 +4,8 @@ import { useRouter } from 'next/router'
 
 export default function MenuLink({ href, children }) {
   const { pathname } = useRouter()
-  console.log(pathname)
   const isActive = pathname.startsWith(href)
-  const css = isActive ? { color: '$primary' } : { color: '$secondary' }
+  const css = isActive ? { color: '$primary' } : { color: '$black' }
   return (
     <NextLink href={href}>
       <Text weight={isActive ? 'bold' : 'normal'}>
