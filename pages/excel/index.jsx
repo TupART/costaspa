@@ -302,6 +302,9 @@ export default function Excel() {
   }
 
   const handled365Export = () => {
+    const text = document.getElementById('D365TEXT').innerText
+    navigator.clipboard.writeText(text)
+
     const worksheet1 = utils.json_to_sheet(dataToExportD365.Agent)
     const worksheet2 = utils.json_to_sheet(dataToExportD365.LicenzeD365)
     const workbook = utils.book_new()
@@ -321,6 +324,9 @@ export default function Excel() {
   }
 
   const handledEmailExport = () => {
+    const text = document.getElementById('PCCEMAILTEXT').innerText
+    navigator.clipboard.writeText(text)
+
     const worksheet1 = utils.json_to_sheet(dataToExportEmail.sheet1)
     const worksheet2 = utils.json_to_sheet(dataToExportEmail.Foglio1)
     const workbook = utils.book_new()
@@ -408,11 +414,23 @@ export default function Excel() {
                   {!canExportD365 ? (
                     <Text>No puede exportar el excel del D365</Text>
                   ) : (
-                    <ul>
-                      {usersSelectedWithData.map((user, index) => (
-                        <li key={index}>{`${user.NAME} ${user.SURNAME}`}</li>
-                      ))}
-                    </ul>
+                    <div id="D365TEXT">
+                      <Text>
+                        Hi Team, <br />
+                        <br />
+                        Find attached Excel for to complete D365 Profile
+                        configuration for the following users:
+                      </Text>
+                      <ul>
+                        {usersSelectedWithData.map((user, index) => (
+                          <li key={index}>{`${user.Email}`}</li>
+                        ))}
+                      </ul>
+                      <Text>
+                        Thanks in advance.
+                        <br /> Best Regards
+                      </Text>
+                    </div>
                   )}
                 </Card.Body>
                 <Card.Footer
@@ -450,9 +468,10 @@ export default function Excel() {
                   {!canExportEmail ? (
                     <Text>No puede exportar el excel del PCC Email</Text>
                   ) : (
-                    <>
+                    <div id="PCCEMAILTEXT">
                       <Text>
                         Hi Team, <br />
+                        <br />
                         Please Syncronize the attached new .pcc mailboxes in to
                         the following PCC Agents profiles:
                       </Text>
@@ -466,7 +485,7 @@ export default function Excel() {
                         <br />
                         Best Regards
                       </Text>
-                    </>
+                    </div>
                   )}
                 </Card.Body>
                 <Card.Footer
