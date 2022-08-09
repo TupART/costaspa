@@ -450,11 +450,23 @@ export default function Excel() {
                   {!canExportEmail ? (
                     <Text>No puede exportar el excel del PCC Email</Text>
                   ) : (
-                    <ul>
-                      {usersSelectedWithData.map((user, index) => (
-                        <li key={index}>{`${user.NAME} ${user.SURNAME}`}</li>
-                      ))}
-                    </ul>
+                    <>
+                      <Text>
+                        Hi Team, <br />
+                        Please Syncronize the attached new .pcc mailboxes in to
+                        the following PCC Agents profiles:
+                      </Text>
+                      <ul>
+                        {usersSelectedWithData.map((user, index) => (
+                          <li key={index}>{`${user.NAME} ${user.SURNAME}`}</li>
+                        ))}
+                      </ul>
+                      <Text>
+                        Thanks in advance.
+                        <br />
+                        Best Regards
+                      </Text>
+                    </>
                   )}
                 </Card.Body>
                 <Card.Footer
