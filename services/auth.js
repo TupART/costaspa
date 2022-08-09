@@ -4,7 +4,6 @@ import { auth } from './firebase'
 import { createUser } from './db'
 import { signInWithPopup, OAuthProvider, signOut, getAuth } from 'firebase/auth'
 
-
 const authContext = createContext()
 
 export function AuthProvider({ children }) {

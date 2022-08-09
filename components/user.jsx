@@ -5,8 +5,13 @@ import { useAuth } from '../services/auth'
 export default function User({ name, photoUrl, children }) {
   const [open, setOpen] = useState(false)
   const handlePress = () => setOpen(!open)
-  const { user } = useAuth()
+  const { user, signInWithMicrosoft } = useAuth()
 
+  const handleClick = () => {
+    signInWithMicrosoft()
+  }
+
+  console.log(user)
   return user ? (
     <>
       <UserNextUI
@@ -18,6 +23,6 @@ export default function User({ name, photoUrl, children }) {
       <div>{open}</div>
     </>
   ) : (
-    <Button>login</Button>
+    <Button onClick={handleClick}>login</Button>
   )
 }

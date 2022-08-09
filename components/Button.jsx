@@ -5,7 +5,13 @@ export default function App({ action, disabled, children }) {
     action()
   }
   return (
-    <Button flat color="secondary" auto onClick={handleClick}>
+    <Button
+      flat
+      color="secondary"
+      disabled={disabled}
+      auto
+      onClick={handleClick}
+    >
       {children}
     </Button>
   )
