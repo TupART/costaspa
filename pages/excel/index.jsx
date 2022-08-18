@@ -142,7 +142,11 @@ const getBusinessUnit = (market) => {
 }
 
 const getTeam = (market) => {
-  return `Team_${market.toUpperCase()[0]}_CCCC_PCC`
+  let letter = market.toUpperCase()[0]
+  if (letter === 'S') {
+    letter = 'E'
+  }
+  return `Team_${letter}_CCCC_PCC`
 }
 
 export default function Excel() {
