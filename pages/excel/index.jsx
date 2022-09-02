@@ -1,13 +1,15 @@
-import { useState } from 'react'
-import { readFile, utils, writeFile } from 'xlsx'
-import { Container, Table, Grid, Card, Text } from '@nextui-org/react'
-import GoToButton from '../../components/goToButton'
+import { Card, Container, Grid, Table, Text } from '@nextui-org/react'
 import { IoCheckmarkSharp, IoCloseSharp } from 'react-icons/io5'
+import { readFile, utils, writeFile } from 'xlsx'
+
 import Button from '../../components/Button'
+import GoToButton from '../../components/goToButton'
+import { useState } from 'react'
 
 const Headers = [
   'NAME',
   'SURNAME',
+  'Delayed Start Production Date',
   'Market',
   'Va a ser PCC',
   'Training start date',
