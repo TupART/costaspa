@@ -1,8 +1,15 @@
-import { useState, useEffect, useContext, createContext } from 'react'
+import {
+  OAuthCredential,
+  OAuthProvider,
+  getAuth,
+  signInWithPopup,
+  signOut as signOutAuth
+} from 'firebase/auth'
+import { createContext, useContext, useEffect, useState } from 'react'
+
 import Router from 'next/router'
 import { auth } from './firebase'
 import { createUser } from './db'
-import { signInWithPopup, OAuthProvider, signOut, getAuth } from 'firebase/auth'
 
 const authContext = createContext()
 
@@ -23,10 +30,8 @@ function useFirebaseAuth() {
     if (rawUser) {
       const user = await formatUser(rawUser)
       const { token, ...userWithoutToken } = user
-
       createUser(user.uid, userWithoutToken)
       setUser(user)
-
       setLoading(false)
       return user
     } else {
@@ -43,19 +48,18 @@ function useFirebaseAuth() {
       tenant: process.env.NEXT_PUBLIC_FIREBASE_TENANT
     })
     return signInWithPopup(auth, provider).then((response) => {
-      handleUser(response.user)
+      handleUser(response)
       if (redirect) {
         Router.push(redirect)
       }
     })
   }
 
-  const signout = () => {
+  const signOut = () => {
     const auth = getAuth()
-    return signOut(auth)
+    return signOutAuth(auth)
       .then(() => {
         setUser(false)
-        Router.push('/')
       })
       .catch((error) => {
         console.error('Error signing out', error)
@@ -63,7 +67,10 @@ function useFirebaseAuth() {
   }
 
   useEffect(() => {
-    const unsubscribe = auth.onIdTokenChanged(handleUser)
+    const unsubscribe = auth.onIdTokenChanged((user) => {
+      console.log('onIdTokenChanged', user)
+      handleUser(user)
+    })
     return () => unsubscribe()
   }, [])
 
@@ -71,16 +78,28 @@ function useFirebaseAuth() {
     user,
     loading,
     signInWithMicrosoft,
-    signout
+    signOut
   }
 }
 
-const formatUser = async (user) => {
+const formatUser = async (result) => {
+  const { user } = result
+  const credential = OAuthProvider.credentialFromResult(result)
+  const options = {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer credential.accessToken'
+    }
+  }
+  const response = await fetch('https://graph.microsoft.com/v1.0/me', options)
+  const photoURL = ''
   return {
     uid: user.uid,
     email: user.email,
     name: user.displayName,
     provider: user.providerData[0].providerId,
-    photoUrl: user.photoURL
+    photoUrl: user.photoURL,
+    accessToken: credential.accessToken,
+    idToken: credential.idToken
   }
 }
