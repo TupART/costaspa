@@ -32,19 +32,12 @@ const Headers = [
   'Step 2 asked',
   'Step 2 User Accepted',
   'Step 2 done',
-  'Step 2.2 asked',
-  'Step 2.2 User Accepted',
-  'Step 2.2 done',
-  'Step 2.3 asked',
-  'Step 2.3 done',
   'Step 3 asked',
   'Step 3 done',
-  'D365 Agent Role requester',
-  'D365 Agent User Accepted',
-  'D365 Agent Ticket excel',
-  'D365 Email Role requester',
-  'D365 PCC Email Ticket number',
-  'D365 Email Ticket excel',
+  'D365 Agent Ticket created',
+  'D365 Agent Ticket closed',
+  'D365 Email Ticket requested',
+  'D365 Email Ticket closed',
   'User revoked'
 ]
 
@@ -86,21 +79,21 @@ const SelectUsers = ({ users, handleSelectedUsers }) => {
               )}
             </Table.Cell>
             <Table.Cell>
-              {user['D365 Agent Ticket excel'] !== undefined ? (
+              {user['D365 Agent Ticket closed'] !== undefined ? (
                 <IoCheckmarkSharp color="#27ae60" />
               ) : (
                 <IoCloseSharp color="#c0392b" />
               )}
             </Table.Cell>
             <Table.Cell>
-              {user['D365 PCC Email Ticket number'] !== undefined ? (
+              {user['D365 Email Ticket requested'] !== undefined ? (
                 <IoCheckmarkSharp color="#27ae60" />
               ) : (
                 <IoCloseSharp color="#c0392b" />
               )}
             </Table.Cell>
             <Table.Cell>
-              {user['D365 Email Ticket excel'] !== undefined ? (
+              {user['D365 Email Ticket closed'] !== undefined ? (
                 <IoCheckmarkSharp color="#27ae60" />
               ) : (
                 <IoCloseSharp color="#c0392b" />
@@ -268,8 +261,8 @@ export default function Excel() {
       setSelectableUsers(
         users2.filter(
           (user) =>
-            user['D365 Agent Ticket excel'] === undefined ||
-            user['D365 Email Ticket excel'] === undefined
+            user['D365 Agent Ticket closed'] === undefined ||
+            user['D365 Email Ticket closed'] === undefined
         )
       )
     }
