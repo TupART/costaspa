@@ -8,7 +8,6 @@ export default function User({ name, photoUrl, children }) {
   const [open, setOpen] = useState(false)
   const handlePress = () => setOpen(!open)
   const { user, signInWithMicrosoft, signOut } = useAuth()
-  console.log(user)
   const handleClick = () => {
     signInWithMicrosoft()
   }

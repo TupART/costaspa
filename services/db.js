@@ -1,7 +1,8 @@
+import { addDoc, collection } from 'firebase/firestore'
+
 // import { compareDesc, compareAsc, parseISO } from 'date-fns';
 // import axios from 'axios';
 import { db } from './firebase'
-import { collection, addDoc } from 'firebase/firestore'
 
 export async function createUser(uid, data) {
   return await addDoc(collection(db, 'users'), {
@@ -9,10 +10,10 @@ export async function createUser(uid, data) {
     ...data
   })
     .then((doc) => {
-      console.log('User created with id ', doc.id)
+      console.info('User created with id ', doc.id)
     })
     .catch((e) => {
-      console.log('Error creating user', e)
+      console.info('Error creating user', e)
     })
 }
 /*

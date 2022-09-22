@@ -1,5 +1,4 @@
 import {
-  OAuthCredential,
   OAuthProvider,
   getAuth,
   signInWithPopup,
@@ -27,18 +26,17 @@ function useFirebaseAuth() {
   const [loading, setLoading] = useState(true)
 
   const handleUser = async (rawUser) => {
-    if (rawUser) {
-      const user = await formatUser(rawUser)
-      const { token, ...userWithoutToken } = user
-      createUser(user.uid, userWithoutToken)
-      setUser(user)
-      setLoading(false)
-      return user
-    } else {
+    if (rawUser === null || rawUser === undefined) {
       setUser(false)
       setLoading(false)
       return false
     }
+    const user = await formatUser(rawUser)
+    const { token, ...userWithoutToken } = user
+    createUser(user.uid, userWithoutToken)
+    setUser(user)
+    setLoading(false)
+    return user
   }
 
   const signInWithMicrosoft = async (redirect) => {
@@ -67,10 +65,7 @@ function useFirebaseAuth() {
   }
 
   useEffect(() => {
-    const unsubscribe = auth.onIdTokenChanged((user) => {
-      console.log('onIdTokenChanged', user)
-      handleUser(user)
-    })
+    const unsubscribe = auth.onIdTokenChanged((user) => handleUser(user))
     return () => unsubscribe()
   }, [])
 
@@ -82,24 +77,23 @@ function useFirebaseAuth() {
   }
 }
 
-const formatUser = async (result) => {
-  const { user } = result
-  const credential = OAuthProvider.credentialFromResult(result)
-  const options = {
-    method: 'GET',
-    headers: {
-      Authorization: 'Bearer credential.accessToken'
-    }
-  }
-  const response = await fetch('https://graph.microsoft.com/v1.0/me', options)
-  const photoURL = ''
+const formatUser = async (user) => {
+  const credential = OAuthProvider.credentialFromResult(user)
+  // const options = {
+  //   method: 'GET',
+  //   headers: {
+  //     Authorization: 'Bearer credential.accessToken'
+  //   }
+  // }
+  //  const response = await fetch('https://graph.microsoft.com/v1.0/me', options)
+  // const photoURL = ''
   return {
     uid: user.uid,
     email: user.email,
     name: user.displayName,
     provider: user.providerData[0].providerId,
     photoUrl: user.photoURL,
-    accessToken: credential.accessToken,
-    idToken: credential.idToken
+    accessToken: credential?.accessToken || null,
+    idToken: credential?.idToken || null
   }
 }

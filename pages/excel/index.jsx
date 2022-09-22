@@ -9,8 +9,8 @@ import { useState } from 'react'
 const Headers = [
   'NAME',
   'SURNAME',
-  'Delayed Start Production Date',
   'Market',
+  'Comments',
   'Va a ser PCC',
   'Training start date',
   'Asignado a',
@@ -36,6 +36,7 @@ const Headers = [
   'Step 3 done',
   'D365 Agent Ticket created',
   'D365 Agent Ticket closed',
+  'D365 Email PCC reqest ticket number',
   'D365 Email Ticket requested',
   'D365 Email Ticket closed',
   'User revoked'
@@ -223,9 +224,11 @@ export default function Excel() {
         sheet1: usersSelected.map((id) => {
           const user = selectableUsers[id]
           return {
-            Mailaddress: user.Email,
-            'Queue Name': `${user.NAME} ${user.SURNAME}`,
-            'Queue Owner': getQueueOwner(user.Market),
+            Mailaddress: `${user['Windows User']}.pcc@costa.it`,
+            'Queue Name': `${user.NAME} ${user.SURNAME} - ${getQueueOwner(
+              user.Market
+            )}`,
+            'Queue Owner': `${user.NAME} ${user.SURNAME}`,
             SLA: '2 days',
             'User to be added in the queue': `${user.NAME} ${user.SURNAME}`,
             'Team Leader of the users': getTeamLeader(user.Market)
@@ -237,7 +240,7 @@ export default function Excel() {
             PCC: `${user.NAME} ${user.SURNAME}`,
             Outlook: user.Email,
             D365: `${user['Windows User']}.pcc@costa.it`,
-            MyAccess: user['D365 PCC Email Ticket number']
+            MyAccess: user['D365 Email PCC reqest ticket number']
           }
         })
       }
@@ -311,6 +314,120 @@ export default function Excel() {
     utils.book_append_sheet(workbook, worksheet1, 'Agent')
     utils.book_append_sheet(workbook, worksheet2, 'LicenzeD365')
 
+    const maxWidthSheet1 = dataToExportD365.Agent.reduce(
+      (w, r) => {
+        const lenght = [
+          { wch: Math.max(r.Role.length + 1, w[0].wch) },
+          { wch: Math.max(r['IS PCC'].length + 1, w[1].wch) },
+          { wch: Math.max(r['Primary email'].length + 1, w[2].wch) },
+          { wch: Math.max(r['Email D365'].length + 1, w[3].wch) },
+          { wch: Math.max(r.Name.length + 1, w[4].wch) },
+          { wch: Math.max(r.Surname.length + 1, w[5].wch) },
+          { wch: Math.max(r['Business Unit'].length + 1, w[6].wch) },
+          { wch: Math.max(r.Administrator.length + 1, w[7].wch) },
+          { wch: Math.max(r.Team.length + 1, w[8].wch) },
+          { wch: Math.max(r.Phone.length + 1, w[9].wch) },
+          { wch: Math.max(r.Workgroup.length + 1, w[10].wch) },
+          { wch: Math.max(r['CTI User'].length + 1, w[11].wch) },
+          { wch: Math.max(r['TTG Code'].length + 1, w[12].wch) },
+          { wch: Math.max(r['CCRM User ID'].length + 1, w[13].wch) },
+          { wch: Math.max(r['TTG ID'].length + 1, w[14].wch) },
+          { wch: Math.max(r['Agency name'].length + 1, w[15].wch) },
+          { wch: Math.max(r.Market.length + 1, w[16].wch) }
+        ]
+        return lenght
+      },
+      [
+        { wch: 4 },
+        { wch: 6 },
+        { wch: 13 },
+        { wch: 10 },
+        { wch: 4 },
+        { wch: 7 },
+        { wch: 13 },
+        { wch: 13 },
+        { wch: 4 },
+        { wch: 5 },
+        { wch: 9 },
+        { wch: 8 },
+        { wch: 8 },
+        { wch: 12 },
+        { wch: 6 },
+        { wch: 11 },
+        { wch: 6 }
+      ]
+    )
+    console.log({ maxWidthSheet1 })
+    const maxWidthSheet2 = dataToExportD365.LicenzeD365.reduce(
+      (w, r) => {
+        const lenght = [
+          { wch: Math.max(r['Primary email'].length + 1, w[0].wch) },
+          { wch: Math.max(r.Name.length + 1, w[1].wch) },
+          { wch: Math.max(r.Surname.length + 1, w[2].wch) },
+          { wch: Math.max(r['Business Unit'].length + 1, w[3].wch) },
+          { wch: Math.max(r['CCRM User ID'].length + 1, w[4].wch) },
+          { wch: Math.max(r['CTI User'].length + 1, w[5].wch) },
+          { wch: Math.max(r.Workgroup.length + 1, w[6].wch) },
+          { wch: Math.max(r['TTG UserID 1'].length + 1, w[7].wch) },
+          { wch: Math.max(r['TTG UserID 2'].length + 1, w[8].wch) },
+          { wch: Math.max(r['TTG UserID3'].length + 1, w[9].wch) },
+          { wch: Math.max(r['Is PCC'].length + 1, w[10].wch) },
+          { wch: Math.max(r['Role Agent?'].length + 1, w[11].wch) },
+          { wch: Math.max(r['Role Team Leader?'].length + 1, w[12].wch) },
+          { wch: Math.max(r['Role Senior Manager?'].length + 1, w[13].wch) },
+          { wch: Math.max(r['Global Manager'].length + 1, w[14].wch) },
+          { wch: Math.max(r['Compensation Approver'].length + 1, w[15].wch) },
+          { wch: Math.max(r['Voucher Manager'].length + 1, w[16].wch) },
+          { wch: Math.max(r['Loyalty Administrator?'].length + 1, w[17].wch) },
+          { wch: Math.max(r['Blacklist Manager'].length + 1, w[18].wch) },
+          { wch: Math.max(r['GDPR Super User'].length + 1, w[19].wch) },
+          { wch: Math.max(r['Customer Service?'].length + 1, w[20].wch) },
+          { wch: Math.max(r['Voucher Setup'].length + 1, w[21].wch) },
+          { wch: Math.max(r['Voucher Discount Setup'].length + 1, w[22].wch) },
+          { wch: Math.max(r['Voucher Approver'].length + 1, w[23].wch) },
+          { wch: Math.max(r['VIP Manager'].length + 1, w[24].wch) },
+          { wch: Math.max(r['Read Only?'].length + 1, w[25].wch) },
+          { wch: Math.max(r['CRM Admin'].length + 1, w[26].wch) },
+          { wch: Math.max(r['Task Manager'].length + 1, w[27].wch) },
+          { wch: Math.max(r['Refund Manager'].length + 1, w[28].wch) }
+        ]
+        return lenght
+      },
+      [
+        { wch: 13 },
+        { wch: 4 },
+        { wch: 7 },
+        { wch: 13 },
+        { wch: 12 },
+        { wch: 8 },
+        { wch: 9 },
+        { wch: 12 },
+        { wch: 12 },
+        { wch: 12 },
+        { wch: 6 },
+        { wch: 12 },
+        { wch: 17 },
+        { wch: 20 },
+        { wch: 15 },
+        { wch: 21 },
+        { wch: 15 },
+        { wch: 22 },
+        { wch: 17 },
+        { wch: 15 },
+        { wch: 17 },
+        { wch: 13 },
+        { wch: 22 },
+        { wch: 16 },
+        { wch: 11 },
+        { wch: 10 },
+        { wch: 9 },
+        { wch: 12 },
+        { wch: 14 }
+      ]
+    )
+    worksheet1['!cols'] = [...maxWidthSheet1]
+    worksheet2['!cols'] = [...maxWidthSheet2]
+
     // get todays date like ddmmyyyy format
     const date = new Date()
     const day = date.getDate()
@@ -332,6 +449,49 @@ export default function Excel() {
 
     utils.book_append_sheet(workbook, worksheet1, 'sheet1')
     utils.book_append_sheet(workbook, worksheet2, 'Foglio1')
+
+    const maxWidthSheet1 = dataToExportEmail.sheet1.reduce(
+      (w, r) => {
+        const lenght = [
+          { wch: Math.max(r.Mailaddress.length + 1, w[0].wch) },
+          { wch: Math.max(r['Queue Name'].length + 1, w[1].wch) },
+          { wch: Math.max(r['Queue Owner'].length + 1, w[2].wch) },
+          { wch: Math.max(r.SLA.length + 1, w[3].wch) },
+          {
+            wch: Math.max(
+              r['User to be added in the queue'].length + 1,
+              w[4].wch
+            )
+          },
+          { wch: Math.max(r['Team Leader of the users'].length + 1, w[5].wch) }
+        ]
+        return lenght
+      },
+      [
+        { wch: 11 },
+        { wch: 10 },
+        { wch: 11 },
+        { wch: 3 },
+        { wch: 29 },
+        { wch: 24 }
+      ]
+    )
+    console.log({ maxWidthSheet1 })
+    const maxWidthSheet2 = dataToExportEmail.Foglio1.reduce(
+      (w, r) => {
+        console.log({ r })
+        const lenght = [
+          { wch: Math.max(r.PCC.length + 1, w[0].wch) },
+          { wch: Math.max(r.Outlook.length + 1, w[1].wch) },
+          { wch: Math.max(r.D365.length + 1, w[2].wch) },
+          { wch: Math.max(r.MyAccess.length + 1, w[3].wch) }
+        ]
+        return lenght
+      },
+      [{ wch: 13 }, { wch: 4 }, { wch: 7 }, { wch: 13 }]
+    )
+    worksheet1['!cols'] = [...maxWidthSheet1]
+    worksheet2['!cols'] = [...maxWidthSheet2]
 
     // get todays date like ddmmyyyy format
     const date = new Date()
