@@ -10,15 +10,13 @@ const Headers = [
   'NAME',
   'SURNAME',
   'Market',
+  'PCC',
+  'Inserted MyAccess',
   'Comments',
-  'Va a ser PCC',
   'Training start date',
-  'Asignado a',
-  'Portatil asignado',
-  'Portatil ok',
+  'Assigned to',
+  'Laptop assigned',
   'Production start date',
-  'Supervisor Name',
-  'Inserted on MyHR Portal',
   'Windows Pwd',
   'Windows User',
   'Email',
@@ -26,7 +24,7 @@ const Headers = [
   'CRM ID',
   'PCC Number',
   'Phone Number',
-  'Pcc Email',
+  'Profile completed',
   'Step 1 asked',
   'Step 1 done',
   'Step 2 asked',
@@ -36,10 +34,10 @@ const Headers = [
   'Step 3 done',
   'D365 Agent Ticket created',
   'D365 Agent Ticket closed',
-  'D365 Email PCC reqest ticket number',
   'D365 Email Ticket requested',
   'D365 Email Ticket closed',
-  'User revoked'
+  'User revoked',
+  'Phone number assigned'
 ]
 
 const states = {
@@ -64,7 +62,6 @@ const SelectUsers = ({ users, handleSelectedUsers }) => {
         <Table.Column>SURNAME</Table.Column>
         <Table.Column>D365 Agent User Accepted</Table.Column>
         <Table.Column>D365 Agent Excel Sended</Table.Column>
-        <Table.Column>D365 PCC Email Ticket number</Table.Column>
         <Table.Column>D365 Email Excel Sended</Table.Column>
       </Table.Header>
       <Table.Body>
@@ -81,13 +78,6 @@ const SelectUsers = ({ users, handleSelectedUsers }) => {
             </Table.Cell>
             <Table.Cell>
               {user['D365 Agent Ticket closed'] !== undefined ? (
-                <IoCheckmarkSharp color="#27ae60" />
-              ) : (
-                <IoCloseSharp color="#c0392b" />
-              )}
-            </Table.Cell>
-            <Table.Cell>
-              {user['D365 Email Ticket requested'] !== undefined ? (
                 <IoCheckmarkSharp color="#27ae60" />
               ) : (
                 <IoCloseSharp color="#c0392b" />
@@ -129,7 +119,7 @@ const getTeamLeader = (market) => {
     case 'ITALY':
       return 'Valeria Amoroso'
     case 'SPAIN':
-      return 'Gerard Dalmau'
+      return 'Laura Montes'
   }
 }
 
@@ -142,7 +132,7 @@ const getTeam = (market) => {
   if (letter === 'S') {
     letter = 'E'
   }
-  return `Team_${letter}_CCCC_PCC`
+  return `Team_${letter}_CCH_PCC`
 }
 
 export default function Excel() {
@@ -165,7 +155,7 @@ export default function Excel() {
           const user = selectableUsers[id]
           return {
             Role: 'Agent',
-            'IS PCC': user['Va a ser PCC'],
+            'IS PCC': user['PCC'],
             'Primary email': user.Email,
             'Email D365': '',
             Name: user.NAME,
@@ -174,12 +164,11 @@ export default function Excel() {
             Administrator: getTeamLeader(user.Market),
             Team: getTeam(user.Market),
             Phone: '',
-            Workgroup: user['PCC Number'],
+            Workgroup: user['PCC number'],
             'CTI User': user['B2E User'],
             'TTG Code': '',
             'CCRM User ID': user['CRM ID'] || user.SURNAME.toLowerCase(),
             'TTG ID': user['B2E User'],
-            'Agency name': '',
             Market: user.Market.toUpperCase()
           }
         }),
@@ -192,11 +181,11 @@ export default function Excel() {
             'Business Unit': getBusinessUnit(user.Market),
             'CCRM User ID': user['CRM ID'] || user.SURNAME.toLowerCase(),
             'CTI User': user['B2E User'],
-            Workgroup: user['PCC Number'],
+            Workgroup: user['PCC number'],
             'TTG UserID 1': user['B2E User'],
             'TTG UserID 2': '',
             'TTG UserID3': '',
-            'Is PCC': user['Va a ser PCC'],
+            'Is PCC': user['PCC'],
             'Role Agent?': 'Y',
             'Role Team Leader?': 'N',
             'Role Senior Manager?': 'N',
@@ -224,7 +213,7 @@ export default function Excel() {
         sheet1: usersSelected.map((id) => {
           const user = selectableUsers[id]
           return {
-            Mailaddress: `${user['Windows User']}.pcc@costa.it`,
+            Mailaddress: `${user['Windows User Name']}.pcc@costa.it`,
             'Queue Name': `${user.NAME} ${user.SURNAME} - ${getQueueOwner(
               user.Market
             )}`,
@@ -239,8 +228,7 @@ export default function Excel() {
           return {
             PCC: `${user.NAME} ${user.SURNAME}`,
             Outlook: user.Email,
-            D365: `${user['Windows User']}.pcc@costa.it`,
-            MyAccess: user['D365 Email PCC reqest ticket number']
+            D365: `${user['Windows User Name']}.pcc@costa.it`
           }
         })
       }
@@ -332,7 +320,6 @@ export default function Excel() {
           { wch: Math.max(r['TTG Code'].length + 1, w[12].wch) },
           { wch: Math.max(r['CCRM User ID'].length + 1, w[13].wch) },
           { wch: Math.max(r['TTG ID'].length + 1, w[14].wch) },
-          { wch: Math.max(r['Agency name'].length + 1, w[15].wch) },
           { wch: Math.max(r.Market.length + 1, w[16].wch) }
         ]
         return lenght
@@ -575,7 +562,7 @@ export default function Excel() {
                   ) : (
                     <div id="D365TEXT">
                       <Text>
-                        Hi Team, <br />
+                        Hello team, <br />
                         <br />
                         Find attached Excel for to complete D365 Profile
                         configuration for the following users:
@@ -629,7 +616,7 @@ export default function Excel() {
                   ) : (
                     <div id="PCCEMAILTEXT">
                       <Text>
-                        Hi Team, <br />
+                        Hello team, <br />
                         <br />
                         Please Syncronize the attached new .pcc mailboxes in to
                         the following PCC Agents profiles:
